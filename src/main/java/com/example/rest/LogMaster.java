@@ -2,6 +2,8 @@
 /*this class show every of log get from particle detector and every row in logs table in radon database*/
 package com.example.rest;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -66,7 +68,10 @@ public class LogMaster {
   public int getPress() {
     return this.press;
   }
-
+public String getDateTimeStr(){
+    DateFormat df = new SimpleDateFormat("hh:mm:ss");
+    return df.format(dateTime);
+  }
   
   @Override
   public String toString(){

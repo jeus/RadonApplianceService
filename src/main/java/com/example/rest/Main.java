@@ -26,7 +26,7 @@ public class Main {
         host = Optional.ofNullable(System.getenv("HOSTNAME"));
         port = Optional.ofNullable(System.getenv("PORT"));
         path = "myapp";
-        BASE_URI = protocol + host.orElse("localhost") + ":" + port.orElse("8080") + "/" + path + "/";
+        BASE_URI = protocol + host.orElse("localhost") + ":" + port.orElse("80") + "/" + path + "/";
     }
 
     /**
