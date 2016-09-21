@@ -1,14 +1,19 @@
 /* Copyright © 2015 Oracle and/or its affiliates. All rights reserved. */
-package com.example.rest;
+package com.jeus.radon.entity.simulator;
 
+import com.jeus.radon.entity.RadonLog;
 import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
+/**
+ * <h1>Simulate log received from appliance<h1><p>
+ * this class implement from <b>Runnable</b> and can run multi instance and run
+ */
+public class RodonLogSimulator implements Runnable {
 
-public class LogsList implements Runnable {
-
-    public static CopyOnWriteArrayList<LogMaster> cList = new CopyOnWriteArrayList<>();
+    //Clist is LogMaster that safe from conflict when read and write. 
+    public static CopyOnWriteArrayList<RadonLog> cList = new CopyOnWriteArrayList<>();
     private Thread t;
     private String threadName;
 
@@ -17,28 +22,24 @@ public class LogsList implements Runnable {
         // Create list of customers
     }
 
-    public LogsList() {
+    public RodonLogSimulator() {
         System.out.println("new log list");
         threadName = "test it";
     }
 
-    public static CopyOnWriteArrayList<LogMaster> getInstance() {
+    public static CopyOnWriteArrayList<RadonLog> getInstance() {
         return cList;
     }
 
     public static void testList() {
-        CopyOnWriteArrayList<LogMaster> list = LogsList.getInstance();
-        list.stream()
-                .forEach(i -> System.out.println(i));
-        String cString
-                = list.stream()
-                .map(c -> c.toString())
-                .collect(Collectors.joining("\n"));
+        CopyOnWriteArrayList<RadonLog> list = RodonLogSimulator.getInstance();
+        list.stream().forEach(i -> System.out.println(i));
+        String cString= list.stream().map(c -> c.toString()).collect(Collectors.joining("\n"));
         System.out.println(cString);
     }
 
     public static void main(String[] args) {
-        LogsList.testList();
+        RodonLogSimulator.testList();
     }
 
     @Override
@@ -47,23 +48,18 @@ public class LogsList implements Runnable {
         try {
             Random rand = new Random();
             while (true) {
-                int i = 4;
-//         for(int i = 4; i > 0; i--) {
+                int i = 1;
                 System.out.println("Thread: ------" + threadName + ", " + i);
-                // Let the thread sleep for a while.
-
-                // nextInt is normally exclusive of the top value,
-                // so add 1 to make it inclusive
-                cList.add(
-                        new LogMaster.LogMasterBuilder().dateTime(new Date())
+                //cretae new LogMaster and add to cList
+                cList.add(new RadonLog.LogMasterBuilder().dateTime(new Date())
                         .radon(rand.nextInt(2000000 + 1))
                         .hum(rand.nextInt(100 + 1))
                         .temp(rand.nextInt(40 + 1))
                         .press(rand.nextInt(300 + 1) + 700)
-                        .build()
-                );
+                        .build());
                 i++;
-                Thread.sleep(5000);
+                // Let the thread sleep for a while.
+                Thread.sleep(3000);
             }
         } catch (InterruptedException e) {
             System.out.println("Thread " + threadName + " interrupted.");
@@ -78,5 +74,4 @@ public class LogsList implements Runnable {
             t.start();
         }
     }
-
 }

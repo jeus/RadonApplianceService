@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.example.rest;
+package com.jeus.radon.rest;
 
 import java.io.IOException;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -12,20 +12,17 @@ import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.ext.Provider;
 
 /**
- *
- * @author jeus
+ *<h1>this permission to client to show JSON</h1>
  */
 @Provider
 public class CORSFilter implements ContainerResponseFilter {
 
     @Override
     public void filter(ContainerRequestContext request,
-            ContainerResponseContext response) throws IOException {
+        ContainerResponseContext response) throws IOException {
         response.getHeaders().add("Access-Control-Allow-Origin", "*");
-        response.getHeaders().add("Access-Control-Allow-Headers",
-                "origin, content-type, accept, authorization");
+        response.getHeaders().add("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
         response.getHeaders().add("Access-Control-Allow-Credentials", "true");
-        response.getHeaders().add("Access-Control-Allow-Methods",
-                "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+        response.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
     }
 }

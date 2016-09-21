@@ -1,7 +1,7 @@
-/* Copyright © 2015 Oracle and/or its affiliates. All rights reserved. */
-package com.example.rest;
+package com.jeus.radon.rest;
 
-import static com.example.rest.LogsList.cList;
+import com.jeus.radon.entity.RadonLog;
+import com.jeus.radon.entity.simulator.RodonLogSimulator;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
@@ -11,6 +11,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+/**
+ * this class run services customers/all and customers/chrt
+ *
+ * @author jeus
+ */
 @Path("/customers")
 public class LogsService {
 
@@ -18,32 +23,38 @@ public class LogsService {
     @Path("/all")
     @Produces(MediaType.TEXT_PLAIN)
     public String getAllCustomers() {
-        System.out.println("---------------------------INJAaaaa----------------------------------" + cList.size());
-        return "---Customer List---\n" + cList.stream().map(c -> c.toString()).collect(Collectors.joining("\n"));
+        System.out.println("---------------------------INJAaaaa----------------------------------" + RodonLogSimulator.cList.size());
+        return "---Customer List---\n" + RodonLogSimulator.cList.stream().map(c -> c.toString()).collect(Collectors.joining("\n"));
     }
 
+    //TODO: have to change this mode to create service to use jersy 
+    /**
+     * this method create all parameter to new JSON all values from first to
+     * now.
+     * @return JSON
+     */
     @GET
     @Path("/chrt")
     @Produces(MediaType.APPLICATION_JSON)
     public String getJsonLogs() {
         System.out.println("------>>>> chrt call");
         return "{\n"
-                + "\"xData\": [" + cList.stream().map(c -> c.getDateTime().getTime() + "").collect(Collectors.joining(",")) + "],\n"
+                + "\"xData\": [" + RodonLogSimulator.cList.stream().map(c -> c.getDateTime().getTime() + "").collect(Collectors.joining(",")) + "],\n"
                 + "\"datasets\": [{\n"
                 + "\"name\" : \"Radon\","
-                + "\"data\": [" + cList.stream().map(c -> c.getRadon() + "").collect(Collectors.joining(",")) + "],\n"
+                + "\"data\": [" + RodonLogSimulator.cList.stream().map(c -> c.getRadon() + "").collect(Collectors.joining(",")) + "],\n"
                 + "\"unit\": \"BQ/m3\",\n"
                 + "\"type\": \"line\",\n"
                 + "\"valueDecimals\": 0\n"
                 + "}, {\n"
                 + "\"name\": \"Temperature\",\n"
-                + "\"data\": [" + cList.stream().map(c -> c.getHum() + "").collect(Collectors.joining(",")) + "],\n"
+                + "\"data\": [" + RodonLogSimulator.cList.stream().map(c -> c.getHum() + "").collect(Collectors.joining(",")) + "],\n"
                 + "\"unit\": \"°C\",\n"
                 + "\"type\": \"area\",\n"
                 + "\"valueDecimals\": 0\n"
                 + "}, {\n"
                 + "\"name\": \"Humidity\",\n"
-                + "\"data\": [" + cList.stream().map(c -> c.getTemp() + "").collect(Collectors.joining(",")) + "],\n"
+                + "\"data\": [" + RodonLogSimulator.cList.stream().map(c -> c.getTemp() + "").collect(Collectors.joining(",")) + "],\n"
                 + "\"unit\": \"%\",\n"
                 + "\"type\": \"area\",\n"
                 + "\"valueDecimals\": 0\n"
@@ -56,25 +67,69 @@ public class LogsService {
     @Produces(MediaType.APPLICATION_JSON)
     public String getLRadon() {
         System.out.println("------>>>> getLastSingle call");
-        LogMaster logMstr = cList.get(cList.size() - 1);
-        return "[" +logMstr.getDateTime().getTime()+","+logMstr.getRadon()+"]";
+        RadonLog logMstr = RodonLogSimulator.cList.get(RodonLogSimulator.cList.size() - 1);
+        return "[" + logMstr.getDateTime().getTime() + "," + logMstr.getRadon() + "]";
     }
-@GET
+
+    /**
+     * return last parameter radon,temp,hum by JSON.
+     *
+     * @return JSON
+     */
+    @GET
+    @Path("/last")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getLRadon1() {
+        System.out.println("------>>>> /last call");
+        RadonLog logMstr = RodonLogSimulator.cList.get(RodonLogSimulator.cList.size() - 1);
+        return "{\"radon\":[" + logMstr.getDateTime().getTime() + "," + logMstr.getRadon() + "],\n"
+                + " \"temp\":[" + logMstr.getDateTime().getTime() + "," + logMstr.getTemp() + "],\n"
+                + "\"hum\":[" + logMstr.getDateTime().getTime() + "," + logMstr.getHum() + "]}";
+    }
+
+    //TODO: have to remove this.
+    @GET
+    @Path("/test")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String test1() {
+        System.out.println("------>>>> getLastSingle call");
+        RadonLog logMstr = RodonLogSimulator.cList.get(RodonLogSimulator.cList.size() - 1);
+        return "{\n"
+                + "\"name\": \"John\",\n"
+                + "\"data\": [5, 3, 4, 7, 2]\n"
+                + "}, {\n"
+                + "\"name\": \"Jane\",\n"
+                + "\"data\": [2, -2, -3, 2, 1]\n"
+                + "}, {\n"
+                + "\"name\": \"Joe\",\n"
+                + "\"data\": [3, 4, 4, -2, 5]\n"
+                + "}";
+    }
+
+    /**
+     * @return last temperature by list.
+     */
+    @GET
     @Path("/ltemp")
     @Produces(MediaType.APPLICATION_JSON)
     public String getLTemp() {
-        System.out.println("------>>>> getLastSingle call");
-        LogMaster logMstr = cList.get(cList.size() - 1);
-        return "[" +logMstr.getDateTime().getTime()+","+logMstr.getTemp()+"]";
+        RadonLog logMstr = RodonLogSimulator.cList.get(RodonLogSimulator.cList.size() - 1);
+        return "[" + logMstr.getDateTime().getTime() + "," + logMstr.getTemp() + "]";
     }
+
+    /**
+     * @return last humadity by list
+     */
     @GET
     @Path("/lhum")
     @Produces(MediaType.APPLICATION_JSON)
     public String getLHum() {
         System.out.println("------>>>> getLastSingle call");
-        LogMaster logMstr = cList.get(cList.size() - 1);
-        return "[" +logMstr.getDateTime().getTime()+","+logMstr.getHum()+"]";
+        RadonLog logMstr = RodonLogSimulator.cList.get(RodonLogSimulator.cList.size() - 1);
+        return "[" + logMstr.getDateTime().getTime() + "," + logMstr.getHum() + "]";
     }
+
+    //TODO: have to remove this. 
     @GET
     @Path("/chrt1")
     @Produces(MediaType.APPLICATION_JSON)
@@ -103,14 +158,14 @@ public class LogsService {
                 + "}]\n"
                 + "}\n";
     }
-
+//TODO: this have to return record by time. 
     @GET
     @Path("{date}")
     @Produces(MediaType.TEXT_PLAIN)
     public String getCustomer(@PathParam("dateTime") long dateTime) {
         System.out.println("------------------------INNNNNJA-----------------------------");
-        Optional<LogMaster> match;
-        match = cList.stream().filter(c -> c.getDateTime().getTime() == dateTime).findFirst();
+        Optional<RadonLog> match;
+        match = RodonLogSimulator.cList.stream().filter(c -> c.getDateTime().getTime() == dateTime).findFirst();
 
         if (match.isPresent()) {
             return "---Customer---\n" + match.get().toString();

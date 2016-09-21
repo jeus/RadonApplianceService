@@ -1,13 +1,24 @@
-/* Copyright © 2015 Oracle and/or its affiliates. All rights reserved. */
-/*this class show every of log get from particle detector and every row in logs table in radon database*/
-package com.example.rest;
+
+package com.jeus.radon.entity;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class LogMaster {
+/**
+ * <h1>Entity Class</h1>
+ * this class entity of received record from appliance <p>
+ * <b>master field has:</b><p>
+ * dateTime (<i>is key</i>)<p>
+ * hum   (<i> humidity </i>)<p>
+ * temp  (<i> temperature </i>)<p>
+ * press (<i> pressure </i>)<p>
+ * radon (<i> redon </i>)<p>
+ * @author jeus
+ */
+
+public class RadonLog {
   private final Date dateTime; //ID
   private final int radon;
   private final int hum;
@@ -15,17 +26,16 @@ public class LogMaster {
   private final int press;
   private static final AtomicLong counter = new AtomicLong(100);
  
-  private LogMaster(LogMasterBuilder builder){
+  private RadonLog(LogMasterBuilder builder){
     this.dateTime = builder.dateTime;
     this.radon = builder.radon;
     this.hum = builder.hum;
     this.temp = builder.temp;
     this.press = builder.press;
-
   }
   
-  public LogMaster(){
-    LogMaster cust = new LogMaster.LogMasterBuilder().id().build();
+  public RadonLog(){
+    RadonLog cust = new RadonLog.LogMasterBuilder().id().build();
       this.dateTime = cust.getDateTime();
       this.radon = cust.getRadon();
       this.hum = cust.getHum();
@@ -34,9 +44,9 @@ public class LogMaster {
      
   }
   
-  public LogMaster(long id, int radon, int hum,
+  public RadonLog(long id, int radon, int hum,
       int temp, int press){
-      LogMaster cust = new LogMaster.LogMasterBuilder().id()
+      RadonLog cust = new RadonLog.LogMasterBuilder().id()
            .radon(radon)
            .hum(hum)
            .temp(temp)
@@ -119,9 +129,12 @@ public String getDateTimeStr(){
       this.press = press;
       return this;
     }
-    
-    public LogMaster build(){
-      return new LogMaster(this);
+    /**
+     * <h1>this use <b>builder<b> design patter. 
+     * @return {@link RadonLog}
+     */
+    public RadonLog build(){
+      return new RadonLog(this);
     }
     
   }    

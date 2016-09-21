@@ -1,6 +1,8 @@
 /* Copyright © 2015 Oracle and/or its affiliates. All rights reserved. */
-package com.example.rest;
+package com.jeus.radon.rest;
 
+import com.jeus.radon.entity.simulator.RodonLogSimulator;
+import com.sun.org.apache.bcel.internal.generic.IREM;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -10,7 +12,10 @@ import java.net.URI;
 import java.util.Optional;
 
 /**
- * Main class
+ * Main class for run services to chart . 
+ * this class show services on chart sample.
+ * have to use "sudo" command to run this file. 
+ * @author jeus
  */
 public class Main {
 
@@ -39,7 +44,7 @@ public class Main {
         // create a resource config that scans for JAX-RS resources and providers
         // in com.example.rest package
         final ResourceConfig rc = new ResourceConfig().packages("com.example.rest");
-
+        
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
@@ -47,13 +52,10 @@ public class Main {
 
     /**
      * Main method.
-     *
-     * @param args
-     * @throws IOException
      */
     public static void main(String[] args) throws IOException {
         final HttpServer server = startServer();
-        LogsList R1 = new LogsList();
+        RodonLogSimulator R1 = new RodonLogSimulator();
         R1.start();
         System.out.println(String.format("Jersey app started with WADL available at "
                 + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
