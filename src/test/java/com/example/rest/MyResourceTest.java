@@ -35,7 +35,7 @@ public class MyResourceTest {
     @After
     public void tearDown() throws Exception {
         System.out.println("After");
-//server.stop();
+        //server.stop();
     }
 
     /**

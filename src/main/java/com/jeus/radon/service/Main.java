@@ -1,5 +1,5 @@
 /* Copyright © 2015 Oracle and/or its affiliates. All rights reserved. */
-package com.jeus.radon.rest;
+package com.jeus.radon.service;
 
 import com.jeus.radon.entity.simulator.RodonLogSimulator;
 import com.sun.org.apache.bcel.internal.generic.IREM;
