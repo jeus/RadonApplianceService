@@ -8,7 +8,10 @@
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>RadonApplianceService</name>
-
+    
+    
+ 
+    
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -22,6 +25,11 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.39</version>
+        </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-grizzly2-http</artifactId>
@@ -59,10 +67,10 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <finalName>jersey-service-${project.version}</finalName>
+                    <finalName>RadonAppliance-${project.version}</finalName>
                     <archive>
                         <manifest>
-                            <mainClass>com.example.rest.Main</mainClass>
+                            <mainClass>${mainClass}</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -99,7 +107,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.example.rest.Main</mainClass>
+                            <mainClass>${mainClass}</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -116,7 +124,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>com.example.rest.Main</mainClass>
+                    <mainClass>${mainClass}</mainClass>
                 </configuration>
             </plugin>
         </plugins>
@@ -125,5 +133,6 @@
     <properties>
         <jersey.version>2.17</jersey.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <mainClass>com.jeus.radon.service.Main</mainClass>    
     </properties>
 </project>

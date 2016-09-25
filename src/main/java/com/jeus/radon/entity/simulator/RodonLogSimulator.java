@@ -51,11 +51,11 @@ public class RodonLogSimulator implements Runnable {
                 int i = 1;
                 System.out.println("Thread: ------" + threadName + ", " + i);
                 //cretae new LogMaster and add to cList
-                cList.add(new RadonLog.LogMasterBuilder().dateTime(new Date())
-                        .radon(rand.nextInt(2000000 + 1))
-                        .hum(rand.nextInt(100 + 1))
-                        .temp(rand.nextInt(40 + 1))
-                        .press(rand.nextInt(300 + 1) + 700)
+                cList.add(new RadonLog.LogMasterBuilder().setDateTime(new Date())
+                        .setRadon(rand.nextInt(2000000 + 1))
+                        .setHum(rand.nextInt(100 + 1))
+                        .setTemp(rand.nextInt(40 + 1))
+                        .setPress(rand.nextInt(300 + 1) + 700)
                         .build());
                 i++;
                 // Let the thread sleep for a while.

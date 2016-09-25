@@ -47,10 +47,10 @@ public class RadonLog {
   public RadonLog(long id, int radon, int hum,
       int temp, int press){
       RadonLog cust = new RadonLog.LogMasterBuilder().id()
-           .radon(radon)
-           .hum(hum)
-           .temp(temp)
-           .press(press)
+           .setRadon(radon)
+           .setHum(hum)
+           .setTemp(temp)
+           .setPress(press)
            .build();
       this.dateTime = cust.getDateTime();
       this.radon = cust.getRadon();
@@ -105,27 +105,30 @@ public String getDateTimeStr(){
       return this;
     }
 
-    public LogMasterBuilder dateTime(Date dateTime){
+    public LogMasterBuilder setDateTime(Date dateTime){
       this.dateTime = dateTime;
       return this;
     }
-    
-    public LogMasterBuilder radon(int radon){
+    public LogMasterBuilder setDateTime(long dateTime){
+        this.dateTime = new Date(dateTime);
+      return this;
+    }
+    public LogMasterBuilder setRadon(int radon){
       this.radon = radon;
       return this;
     }
 
-    public LogMasterBuilder hum(int hum){
+    public LogMasterBuilder setHum(int hum){
       this.hum = hum;
       return this;
     }
     
-    public LogMasterBuilder temp(int temp){
+    public LogMasterBuilder setTemp(int temp){
       this.temp = temp;
       return this;
     }
     
-    public LogMasterBuilder press(int press){
+    public LogMasterBuilder setPress(int press){
       this.press = press;
       return this;
     }

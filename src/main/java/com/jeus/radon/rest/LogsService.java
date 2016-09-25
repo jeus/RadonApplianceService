@@ -1,5 +1,7 @@
 package com.jeus.radon.rest;
 
+import com.jeus.radon.database.Connection;
+import com.jeus.radon.database.RadonPull;
 import com.jeus.radon.entity.RadonLog;
 import com.jeus.radon.entity.simulator.RodonLogSimulator;
 import java.util.Optional;
@@ -16,8 +18,12 @@ import javax.ws.rs.core.MediaType;
  *
  * @author jeus
  */
-@Path("/customers")
+@Path("/radon")
 public class LogsService {
+
+    static {
+        RadonPull radonPull = new RadonPull();
+    }
 
     @GET
     @Path("/all")
@@ -30,6 +36,7 @@ public class LogsService {
     /**
      * this method create all parameter to new JSON all values from first to
      * now.
+     *
      * @return JSON
      */
     @GET
@@ -76,11 +83,28 @@ public class LogsService {
     @GET
     @Path("/last")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getLRadon1() {
-        RadonLog logMstr = RodonLogSimulator.cList.get(RodonLogSimulator.cList.size() - 1);
+    public String getLastRadon() {
+        RadonPull radonPull = new RadonPull();
+        RadonLog logMstr = radonPull.getLastLog();
+
         return "{\"radon\":[" + logMstr.getDateTime().getTime() + "," + logMstr.getRadon() + "],\n"
                 + " \"temp\":[" + logMstr.getDateTime().getTime() + "," + logMstr.getTemp() + "],\n"
                 + "\"hum\":[" + logMstr.getDateTime().getTime() + "," + logMstr.getHum() + "]}";
+    }
+
+    /**
+     * GET CSV file from all result.
+     *
+     * @return
+     */
+    @GET
+    @Path("/csv")
+    @Produces("text/csv")
+    public String getCsv() {
+        RadonPull radonPull = new RadonPull();
+        String logString = radonPull.getCsvLog();
+        return logString;
+
     }
 
     //TODO: have to remove this.
@@ -113,7 +137,7 @@ public class LogsService {
     }
 
     /**
-     * @return last humadity by list
+     * @return last humidity by list
      */
     @GET
     @Path("/lhum")
@@ -152,6 +176,7 @@ public class LogsService {
                 + "}\n";
     }
 //TODO: this have to return record by time. 
+
     @GET
     @Path("{date}")
     @Produces(MediaType.TEXT_PLAIN)
