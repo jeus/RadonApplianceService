@@ -21,8 +21,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class RadonLog {
   private final Date dateTime; //ID
   private final int radon;
-  private final int hum;
-  private final int temp;
+  private final float hum;
+  private final float temp;
   private final int press;
   private static final AtomicLong counter = new AtomicLong(100);
  
@@ -44,8 +44,8 @@ public class RadonLog {
      
   }
   
-  public RadonLog(long id, int radon, int hum,
-      int temp, int press){
+  public RadonLog(long id, int radon, float hum,
+      float temp, int press){
       RadonLog cust = new RadonLog.LogMasterBuilder().id()
            .setRadon(radon)
            .setHum(hum)
@@ -67,11 +67,11 @@ public class RadonLog {
     return this.radon;
   }
 
-  public int getHum() {
+  public float getHum() {
     return this.hum;
   }
   
-  public int getTemp(){
+  public float getTemp(){
     return this.temp;
   }
 
@@ -95,8 +95,8 @@ public String getDateTimeStr(){
   public static class LogMasterBuilder{
     private Date dateTime;
     private int radon;
-    private int hum ;
-    private int temp ;
+    private float hum ;
+    private float temp ;
     private int press ;
 
     
@@ -118,12 +118,12 @@ public String getDateTimeStr(){
       return this;
     }
 
-    public LogMasterBuilder setHum(int hum){
+    public LogMasterBuilder setHum(float hum){
       this.hum = hum;
       return this;
     }
     
-    public LogMasterBuilder setTemp(int temp){
+    public LogMasterBuilder setTemp(float temp){
       this.temp = temp;
       return this;
     }
@@ -138,7 +138,6 @@ public String getDateTimeStr(){
      */
     public RadonLog build(){
       return new RadonLog(this);
-    }
-    
-  }    
+    } 
+  }
 }

@@ -6,6 +6,7 @@
 package com.jeus.radon.database;
 
 import com.jeus.radon.entity.RadonLog;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -56,9 +57,9 @@ public class RadonPull {
                 csvStrBuilder.append(",");
                 csvStrBuilder.append(rs.getInt("radon"));
                 csvStrBuilder.append(",");
-                csvStrBuilder.append(rs.getInt("hum"));
+                csvStrBuilder.append(rs.getFloat("hum"));
                 csvStrBuilder.append(",");
-                csvStrBuilder.append(rs.getInt("temp"));
+                csvStrBuilder.append(rs.getFloat("temp"));
                 csvStrBuilder.append(",");
                 csvStrBuilder.append(rs.getInt("pres"));
                 csvStrBuilder.append("\n");
@@ -71,13 +72,33 @@ public class RadonPull {
             return null;
         }
     }
+    
+    public void DeleteAll() {
+        try {
+            Connection connection = new Connection();
+            java.sql.Connection con = connection.getConnection();
+            String sql = "DELETE FROM logs";
+            Statement statement = con.createStatement();
+            System.out.println("-------------------------------------->>>>");
+         int count =   statement.executeUpdate(sql);
+            System.out.println("COUNT = "+count);
+//            while (rs.next()) {
+//                System.out.println("Remove ");
+//            }
+            con.close();
+//            return csvStrBuilder.toString();
+        } catch (Exception e) {
+            System.out.println("EXCEPTION WHEN DELETE DATA " + e.getMessage());
+//            return null;
+        }
+    }
 
     private RadonLog resultSetToObject(ResultSet rs) {
         try {
             RadonLog log = new RadonLog.LogMasterBuilder().setDateTime(rs.getTimestamp("dateId").getTime())
                     .setRadon(rs.getInt("radon"))
-                    .setHum(rs.getInt("hum"))
-                    .setTemp(rs.getInt("temp"))
+                    .setHum(rs.getFloat("hum"))
+                    .setTemp(rs.getFloat("temp"))
                     .setPress(rs.getInt("pres"))
                     .build();
             return log;

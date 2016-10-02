@@ -4,14 +4,20 @@ import com.jeus.radon.database.Connection;
 import com.jeus.radon.database.RadonPull;
 import com.jeus.radon.entity.RadonLog;
 import com.jeus.radon.entity.simulator.RodonLogSimulator;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 
 /**
  * this class run services customers/all and customers/chrt
@@ -99,14 +105,49 @@ public class LogsService {
      */
     @GET
     @Path("/csv")
-    @Produces("text/csv")
-    public String getCsv() {
-        RadonPull radonPull = new RadonPull();
-        String logString = radonPull.getCsvLog();
-        return logString;
-
+    public Response downloadPdfFile()
+    {
+        StreamingOutput fileStream =  new StreamingOutput() 
+        {
+            @Override
+            public void write(java.io.OutputStream output) throws IOException, WebApplicationException 
+            {
+                try
+                {
+                    RadonPull radonPull = new RadonPull();
+                    String logString = radonPull.getCsvLog();
+                    java.nio.file.Path path = Paths.get("C:/temp/test.pdf");
+                    byte[] data = logString.getBytes();
+                    output.write(data);
+                    output.flush();
+                } 
+                catch (Exception e) 
+                {
+                    throw new WebApplicationException("File Not Found !!");
+                }
+            }
+        };
+        return Response
+                .ok(fileStream, MediaType.APPLICATION_OCTET_STREAM)
+                .header("content-disposition","attachment; filename = myfile.csv")
+                .build();
     }
-
+    
+    
+    /**
+     * Delete all record data in database;
+     * @return response 200
+     */
+    @GET
+    @Path("/delall")
+    @Produces(MediaType.TEXT_PLAIN)
+    public int deleteAll() {
+        System.out.println("-------------------------------------------------");
+        RadonPull radonPull = new RadonPull();
+       radonPull.DeleteAll();
+        return 200;
+    }
+    
     //TODO: have to remove this.
     @GET
     @Path("/test")
