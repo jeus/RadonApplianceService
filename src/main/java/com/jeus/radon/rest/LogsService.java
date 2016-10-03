@@ -105,37 +105,34 @@ public class LogsService {
      */
     @GET
     @Path("/csv")
-    public Response downloadPdfFile()
-    {
-        StreamingOutput fileStream =  new StreamingOutput() 
-        {
+    public Response downloadPdfFile() {
+        String fileName = "Unknown";
+        RadonPull radonPull = new RadonPull();
+        fileName = radonPull.getFileName();
+        StreamingOutput fileStream = new StreamingOutput() {
             @Override
-            public void write(java.io.OutputStream output) throws IOException, WebApplicationException 
-            {
-                try
-                {
+            public void write(java.io.OutputStream output) throws IOException, WebApplicationException {
+                try {
                     RadonPull radonPull = new RadonPull();
                     String logString = radonPull.getCsvLog();
-                    java.nio.file.Path path = Paths.get("C:/temp/test.pdf");
                     byte[] data = logString.getBytes();
                     output.write(data);
                     output.flush();
-                } 
-                catch (Exception e) 
-                {
-                    throw new WebApplicationException("File Not Found !!");
+                } catch (Exception e) {
+                    System.out.println("EXCEPTION " + e.getMessage());
                 }
             }
         };
+
         return Response
                 .ok(fileStream, MediaType.APPLICATION_OCTET_STREAM)
-                .header("content-disposition","attachment; filename = myfile.csv")
+                .header("content-disposition", "attachment; filename = " + fileName + ".csv")
                 .build();
     }
-    
-    
+
     /**
      * Delete all record data in database;
+     *
      * @return response 200
      */
     @GET
@@ -144,10 +141,20 @@ public class LogsService {
     public int deleteAll() {
         System.out.println("-------------------------------------------------");
         RadonPull radonPull = new RadonPull();
-       radonPull.DeleteAll();
+        radonPull.DeleteAll();
         return 200;
     }
-    
+
+    @GET
+    @Path("/fileName")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String fileName() {
+        String fileName = "Unknown";
+        RadonPull radonPull = new RadonPull();
+        fileName = radonPull.getFileName();
+        return fileName;
+    }
+
     //TODO: have to remove this.
     @GET
     @Path("/test")

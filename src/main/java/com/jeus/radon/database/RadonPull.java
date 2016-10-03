@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +36,40 @@ public class RadonPull {
             }
             con.close();
             return radonLog;
+        } catch (Exception e) {
+            System.out.println("EXCEPTION WHEN LOAD DATA " + e.getMessage());
+            return null;
+        }
+    }
+
+    public String getFileName() {
+        try {
+            Date start = new Date();
+            Date end = new Date();
+            Connection connection = new Connection();
+            java.sql.Connection con = connection.getConnection();
+            Statement statement = con.createStatement();
+
+            String sqlEnd = "SELECT DateId from logs order by dateId DESC limit 1";
+            String sqlStart = "SELECT DateId from logs order by dateId limit 1";
+
+            ResultSet rs = statement.executeQuery(sqlStart);
+            while (rs.next()) {
+                start = rs.getTimestamp("dateId");
+            }
+            rs = statement.executeQuery(sqlEnd);
+            while (rs.next()) {
+                end = rs.getTimestamp("dateId");
+            }
+            con.close();
+
+            SimpleDateFormat startDateFormat = new SimpleDateFormat("YY_mm_dd");
+            String fileName = "From_" + startDateFormat.format(start);
+
+            SimpleDateFormat endDateFormat = new SimpleDateFormat("YY_mm_dd_hh:mm:ss");
+            fileName = fileName + "_To_" + endDateFormat.format(end);
+
+            return fileName;
         } catch (Exception e) {
             System.out.println("EXCEPTION WHEN LOAD DATA " + e.getMessage());
             return null;
@@ -72,7 +107,7 @@ public class RadonPull {
             return null;
         }
     }
-    
+
     public void DeleteAll() {
         try {
             Connection connection = new Connection();
@@ -80,8 +115,8 @@ public class RadonPull {
             String sql = "DELETE FROM logs";
             Statement statement = con.createStatement();
             System.out.println("-------------------------------------->>>>");
-         int count =   statement.executeUpdate(sql);
-            System.out.println("COUNT = "+count);
+            int count = statement.executeUpdate(sql);
+            System.out.println("COUNT = " + count);
 //            while (rs.next()) {
 //                System.out.println("Remove ");
 //            }
