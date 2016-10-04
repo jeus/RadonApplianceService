@@ -2,6 +2,7 @@
 package com.jeus.radon.service;
 
 import com.jeus.radon.database.Connection;
+import java.io.File;
 import java.io.FileInputStream;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -12,6 +13,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Optional;
 import java.util.Properties;
+import org.glassfish.grizzly.http.server.StaticHttpHandler;
 
 /**
  * Main class for run services to chart . this class show services on chart
@@ -32,10 +34,10 @@ public class Main {
         protocol = "http://";
         host = Optional.ofNullable(System.getenv("HOSTNAME"));
         port = Optional.ofNullable(System.getenv("PORT"));
-        path = "crms";
-        BASE_URI = protocol + host.orElse("0.0.0.0") + ":" + port.orElse("80") + "/" + path + "/";
+        path = "jeus";
+        BASE_URI = protocol + host.orElse("0.0.0.0") + ":" + port.orElse("8076") + "/" + path + "/";
     }
-  
+
     /**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this
      * application.
@@ -49,7 +51,13 @@ public class Main {
 
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
-        return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
+        HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
+        String docFile = new File("src/main/webapp").getAbsolutePath() + "/pages";
+        
+        server.getServerConfiguration().addHttpHandler(new StaticHttpHandler(docFile));
+//        server.getServerConfiguration().addHttpHandler(
+//                new org.glassfish.grizzly.http.server.StaticHttpHandler("/src/main/webapp/pages/index.html/" ), "/");
+        return server;
     }
 
     /**
@@ -73,7 +81,7 @@ public class Main {
             Connection.jdbc_driver = prop.getProperty("jdbc-driver");
             Connection.username = prop.getProperty("username");
             Connection.password = prop.getProperty("password");
-            
+
         } catch (IOException ex) {
             ex.printStackTrace();
         } finally {
