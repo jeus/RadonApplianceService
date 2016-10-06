@@ -4,10 +4,16 @@ import com.jeus.radon.database.Connection;
 import com.jeus.radon.database.RadonPull;
 import com.jeus.radon.entity.RadonLog;
 import com.jeus.radon.entity.simulator.RodonLogSimulator;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -153,6 +159,29 @@ public class LogsService {
         RadonPull radonPull = new RadonPull();
         fileName = radonPull.getFileName();
         return fileName;
+    }
+
+    @GET
+    @Path("/ip")
+   @Produces(MediaType.APPLICATION_JSON)
+    public String getIp() {
+  String unknown = "Unknown";
+        try {
+            Process p = Runtime.getRuntime().exec("getIp");
+            String line = null;
+            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            if((line = in.readLine()) != null) {
+            in.close();
+            return "{\"ip\": \""+line+"\" }";
+            }
+            return unknown;
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(LogsService.class.getName()).log(Level.SEVERE, null, ex);
+            return unknown;
+        } catch (IOException ex) {
+            Logger.getLogger(LogsService.class.getName()).log(Level.SEVERE, null, ex);
+            return unknown;
+        }
     }
 
     //TODO: have to remove this.

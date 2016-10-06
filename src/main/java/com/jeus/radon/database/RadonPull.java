@@ -87,8 +87,9 @@ public class RadonPull {
             RadonLog radonLog = null;
             StringBuilder csvStrBuilder = new StringBuilder();
             csvStrBuilder.append("Date,Radon,Humidity,Temperature,pressure\n");
+            SimpleDateFormat endDateFormat = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
             while (rs.next()) {
-                csvStrBuilder.append(rs.getTimestamp("dateId").getTime());
+                csvStrBuilder.append(endDateFormat.format(rs.getTimestamp("dateId").getTime()));
                 csvStrBuilder.append(",");
                 csvStrBuilder.append(rs.getInt("radon"));
                 csvStrBuilder.append(",");
