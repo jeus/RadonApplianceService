@@ -35,7 +35,7 @@ public class Main {
         host = Optional.ofNullable(System.getenv("HOSTNAME"));
         port = Optional.ofNullable(System.getenv("PORT"));
         path = "jeus";
-        BASE_URI = protocol + host.orElse("0.0.0.0") + ":" + port.orElse("8076") + "/" + path + "/";
+        BASE_URI = protocol + host.orElse("0.0.0.0") + ":" + port.orElse("<PORT>") + "/" + path + "/";
     }
 
     /**
@@ -44,16 +44,16 @@ public class Main {
      *
      * @return Grizzly HTTP server.
      */
-    public static HttpServer startServer() {
+    public static HttpServer startServer(int port) {
         // create a resource config that scans for JAX-RS resources and providers
         // in com.example.rest package
         final ResourceConfig rc = new ResourceConfig().packages("com.jeus.radon.rest");
-
+        String baseUri = BASE_URI.replace("<PORT>", port + "");
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
-        HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
-        String docFile = new File("src/main/webapp").getAbsolutePath() + "/pages";
-        
+        HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create(baseUri), rc);
+        String docFile = new File("/home/jeus/webapp").getAbsolutePath() + "/pages";
+
         server.getServerConfiguration().addHttpHandler(new StaticHttpHandler(docFile));
 //        server.getServerConfiguration().addHttpHandler(
 //                new org.glassfish.grizzly.http.server.StaticHttpHandler("/src/main/webapp/pages/index.html/" ), "/");
@@ -64,7 +64,13 @@ public class Main {
      * Main method.
      */
     public static void main(String[] args) throws IOException {
-        final HttpServer server = startServer();
+        String port = null;
+        final HttpServer server;
+        if (args != null) {
+            server = startServer(Integer.parseInt(args[0]));
+        } else {
+            server = startServer(80);
+        }
         Properties prop = new Properties();
         InputStream input = null;
 
