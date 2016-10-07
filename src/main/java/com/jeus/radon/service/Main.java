@@ -104,7 +104,7 @@ public class Main {
 //        R1.start();
         System.out.println(String.format("Jersey app started with WADL available at "
                 + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
-        System.in.read();
-        server.stop();
+//        System.in.read();
+//        server.stop();
     }
 }
