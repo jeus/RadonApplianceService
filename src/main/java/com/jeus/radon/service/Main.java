@@ -53,10 +53,8 @@ public class Main {
         // exposing the Jersey application at BASE_URI
         HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create(baseUri), rc);
         String docFile = new File("/home/jeus/webapp").getAbsolutePath() + "/pages";
-
-        server.getServerConfiguration().addHttpHandler(new StaticHttpHandler(docFile));
-//        server.getServerConfiguration().addHttpHandler(
-//                new org.glassfish.grizzly.http.server.StaticHttpHandler("/src/main/webapp/pages/index.html/" ), "/");
+        StaticHttpHandler handler = new StaticHttpHandler(docFile);
+        server.getServerConfiguration().addHttpHandler(handler);
         return server;
     }
 
@@ -66,10 +64,10 @@ public class Main {
     public static void main(String[] args) throws IOException {
         String port = null;
         final HttpServer server;
-        if (args != null) {
-            server = startServer(Integer.parseInt(args[0]));
-        } else {
+        if (args.length < 1) {
             server = startServer(80);
+        } else {
+            server = startServer(Integer.parseInt(args[0]));
         }
         Properties prop = new Properties();
         InputStream input = null;
