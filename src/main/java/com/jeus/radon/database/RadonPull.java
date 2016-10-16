@@ -84,7 +84,6 @@ public class RadonPull {
             String sql = "SELECT * FROM logs order by dateId";
 
             ResultSet rs = statement.executeQuery(sql);
-            RadonLog radonLog = null;
             StringBuilder csvStrBuilder = new StringBuilder();
             csvStrBuilder.append("Date,Radon,Humidity,Temperature,pressure\n");
             SimpleDateFormat endDateFormat = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
@@ -92,6 +91,8 @@ public class RadonPull {
                 csvStrBuilder.append(endDateFormat.format(rs.getTimestamp("dateId").getTime()));
                 csvStrBuilder.append(",");
                 csvStrBuilder.append(rs.getInt("radon"));
+                csvStrBuilder.append(",");
+                csvStrBuilder.append(rs.getInt("toler"));
                 csvStrBuilder.append(",");
                 csvStrBuilder.append(rs.getFloat("hum"));
                 csvStrBuilder.append(",");
@@ -133,6 +134,7 @@ public class RadonPull {
         try {
             RadonLog log = new RadonLog.LogMasterBuilder().setDateTime(rs.getTimestamp("dateId").getTime())
                     .setRadon(rs.getInt("radon"))
+                    .setToler(rs.getInt("toler"))
                     .setHum(rs.getFloat("hum"))
                     .setTemp(rs.getFloat("temp"))
                     .setPress(rs.getInt("pres"))

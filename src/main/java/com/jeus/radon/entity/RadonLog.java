@@ -15,12 +15,14 @@ import java.util.concurrent.atomic.AtomicLong;
  * temp  (<i> temperature </i>)<p>
  * press (<i> pressure </i>)<p>
  * radon (<i> redon </i>)<p>
+ * toler (<i> toler </i>)<p>
  * @author jeus
  */
 
 public class RadonLog {
   private final Date dateTime; //ID
   private final int radon;
+  private final int toler;
   private final float hum;
   private final float temp;
   private final int press;
@@ -29,6 +31,7 @@ public class RadonLog {
   private RadonLog(LogMasterBuilder builder){
     this.dateTime = builder.dateTime;
     this.radon = builder.radon;
+    this.toler = builder.toler;
     this.hum = builder.hum;
     this.temp = builder.temp;
     this.press = builder.press;
@@ -38,6 +41,7 @@ public class RadonLog {
     RadonLog cust = new RadonLog.LogMasterBuilder().id().build();
       this.dateTime = cust.getDateTime();
       this.radon = cust.getRadon();
+      this.toler = cust.getToler();
       this.hum = cust.getHum();
       this.temp = cust.getTemp();
       this.press = cust.getPress();
@@ -54,6 +58,7 @@ public class RadonLog {
            .build();
       this.dateTime = cust.getDateTime();
       this.radon = cust.getRadon();
+      this.toler = cust.getToler();
       this.hum = cust.getHum();
       this.temp = cust.getTemp();
       this.press = cust.getPress();
@@ -67,6 +72,11 @@ public class RadonLog {
     return this.radon;
   }
 
+    public int getToler() {
+        return toler;
+    }
+
+  
   public float getHum() {
     return this.hum;
   }
@@ -87,6 +97,7 @@ public String getDateTimeStr(){
   public String toString(){
     return "Date Time: " + dateTime 
         + " radon: " + radon
+        + " toler: " + toler
         + " hum: " + hum 
         + " temp: " + temp 
         + " Press: " + press;
@@ -95,6 +106,7 @@ public String getDateTimeStr(){
   public static class LogMasterBuilder{
     private Date dateTime;
     private int radon;
+    private int toler ;
     private float hum ;
     private float temp ;
     private int press ;
@@ -115,6 +127,10 @@ public String getDateTimeStr(){
     }
     public LogMasterBuilder setRadon(int radon){
       this.radon = radon;
+      return this;
+    }
+    public LogMasterBuilder setToler(int toler){
+      this.toler = toler;
       return this;
     }
 
