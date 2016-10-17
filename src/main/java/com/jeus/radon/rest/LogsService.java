@@ -167,7 +167,8 @@ public class LogsService {
     public String getIp() {
         String unknown = "Unknown";
         try {
-            Process p = Runtime.getRuntime().exec("getIp");
+            Process p = new ProcessBuilder("/bin/bash", "/usr/local/sbin/getIp").start();
+//Runtime.getRuntime().exec("getIp");
             String line = null;
             BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
             if ((line = in.readLine()) != null) {
