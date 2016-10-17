@@ -99,7 +99,7 @@ public class LogsService {
         RadonPull radonPull = new RadonPull();
         RadonLog logMstr = radonPull.getLastLog();
 
-        return "{\"radon\":[" + logMstr.getDateTime().getTime() + "," + logMstr.getRadon() + "],\n"
+        return "{\"radon\":[{ \"x\": " + logMstr.getDateTime().getTime() + " , \"tolerance\": " + logMstr.getToler() + ", \"y\":" + logMstr.getRadon() + "}],\n"
                 + " \"temp\":[" + logMstr.getDateTime().getTime() + "," + logMstr.getTemp() + "],\n"
                 + "\"hum\":[" + logMstr.getDateTime().getTime() + "," + logMstr.getHum() + "]}";
     }
@@ -163,16 +163,16 @@ public class LogsService {
 
     @GET
     @Path("/ip")
-   @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public String getIp() {
-  String unknown = "Unknown";
+        String unknown = "Unknown";
         try {
             Process p = Runtime.getRuntime().exec("getIp");
             String line = null;
             BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            if((line = in.readLine()) != null) {
-            in.close();
-            return "{\"ip\": \""+line+"\" }";
+            if ((line = in.readLine()) != null) {
+                in.close();
+                return "{\"ip\": \"" + line + "\" }";
             }
             return unknown;
         } catch (UnknownHostException ex) {

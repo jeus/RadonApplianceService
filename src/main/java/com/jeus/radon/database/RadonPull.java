@@ -85,7 +85,7 @@ public class RadonPull {
 
             ResultSet rs = statement.executeQuery(sql);
             StringBuilder csvStrBuilder = new StringBuilder();
-            csvStrBuilder.append("Date,Radon,Humidity,Temperature,pressure\n");
+            csvStrBuilder.append("Date,Radon,tolererance,Humidity,Temperature,pressure\n");
             SimpleDateFormat endDateFormat = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
             while (rs.next()) {
                 csvStrBuilder.append(endDateFormat.format(rs.getTimestamp("dateId").getTime()));
